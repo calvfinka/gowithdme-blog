@@ -1,0 +1,14 @@
+/* Arsip Blog: panel admin (uploader) dan halaman publik /arsip */
+.ar-drop{display:block;border:2px dashed var(--line);border-radius:12px;padding:22px 14px;text-align:center;color:var(--mute);cursor:pointer;margin-bottom:10px;font-size:14px}
+.ar-drop:hover,.ar-drop.on{border-color:var(--accent);background:var(--hover)}
+.ar-drop b{display:block;color:var(--ink);margin-bottom:2px}
+.ar-opt{display:grid;gap:6px;margin:8px 0 12px;font-size:14px}.ar-opt label{display:flex;gap:8px;align-items:flex-start}
+.ar-track{height:10px;background:var(--field);border-radius:99px;overflow:hidden}.ar-fill{height:100%;width:0;background:var(--accent);transition:width .2s}
+.ar-row{display:flex;justify-content:space-between;gap:8px;font-size:13px;margin:6px 0;color:var(--mute)}
+.ar-log{max-height:160px;overflow:auto;font:12px/1.5 ui-monospace,monospace;background:var(--field);border-radius:8px;padding:8px;margin-top:8px}
+.ar-search{display:flex;gap:8px;margin:0 0 12px}.ar-search input{flex:1;min-width:0;height:38px;border:1px solid var(--line);border-radius:8px;padding:0 12px;background:var(--bg);color:var(--ink);font:inherit}
+.ar-search button{height:38px}
+.ar-pg{display:flex;justify-content:center;align-items:center;gap:12px;margin:22px 0 0;font-size:14px;color:var(--mute)}
+.bl-body img{max-width:100%;height:auto;border-radius:8px}.bl-body figure{margin:0 0 16px}.bl-body figcaption{font-size:13px;color:var(--mute)}
+.ar-lab{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 16px}.ar-lab a{font-size:12px;border:1px solid var(--line);border-radius:99px;padding:2px 10px;text-decoration:none;color:var(--mute)}
+.ar-kom{border-top:1px solid var(--line);padding:10px 0;font-size:15px}.ar-kom b{font-size:14px}.ar-kom span{color:var(--mute);font-size:12px;margin-left:6px}.ar-kom p{margin:4px 0 0;white-space:pre-line}
