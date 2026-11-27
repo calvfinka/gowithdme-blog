@@ -208,7 +208,7 @@ def card(p,x):
             f'<div class="bl-cb"><p class="bl-bd"><a class="bl-badge" href="{p}{c}/">{ic(c)}{esc(CATNAME[c])}</a><time datetime="{esc((x.get("published_at") or "")[:10])}">{fdate(x.get("published_at"))}</time></p>'
             f'<h2><a href="{url}">{esc(x["title"])}</a></h2><p class="bl-ex">{esc(x["_ex"])}</p>'
             f'<p class="bl-ft"><span class="bl-s">{ic("clock")}{x["_m"]} mnt baca</span><span class="bl-s bl-sv" hidden>{ic("eye")}<b data-v></b></span><span class="bl-s bl-sc" hidden>{ic("chat")}<b data-c></b></span><span class="bl-s bl-sl" hidden>{ic("heart")}<b data-l></b></span>'
-            f'<button type="button" class="bl-ib bl-sh2" data-share="{esc(x["_canon"])}" data-title="{esc(x["title"])}" aria-label="Bagikan tulisan">{ic("share")}</button></p></div></article>')
+            f'<button type="button" class="bl-ib bl-sh2" data-share="{esc(x["_short"])}" data-title="{esc(x["title"])}" aria-label="Bagikan tulisan">{ic("share")}</button></p></div></article>')
 def side_in(p,posts,counts,cur,pop=True):
     popl="".join(f'<li data-k="{x["category"]}/{x["slug"]}"><a href="{p}{x["category"]}/{x["slug"]}"><b>{esc(x["title"])}</b><span>{esc(CATNAME[x["category"]])} · <i class="bl-sv" hidden><b data-v></b> dibaca</i><i class="bl-nv">{fdate(x.get("published_at"))}</i></span></a></li>' for x in posts[:5])
     cnt=lambda k: counts.get(k,0)
@@ -251,7 +251,7 @@ def article(p,x,others,BASE,prev,nxt,allp,counts):
         {"@type":"ListItem","position":1,"name":"Blog","item":f"{BASE}/"},
         {"@type":"ListItem","position":2,"name":CATNAME[k],"item":f"{BASE}/{k}/"},
         {"@type":"ListItem","position":3,"name":x["title"],"item":canon}]}]})
-    shr="".join(f'<a class="bl-sb bl-sb-{c}" target="_blank" rel="noopener noreferrer" href="{esc(h)}">{n}</a>' for n,h,c in sharelinks(canon,x["title"]))
+    shr="".join(f'<a class="bl-sb bl-sb-{c}" target="_blank" rel="noopener noreferrer" href="{esc(h)}">{n}</a>' for n,h,c in sharelinks(x["_short"],x["title"]))
     more="".join(card(p,o) for o in others)
     def pn(o,lab,cls,icon,left):
         if not o: return f'<span class="bl-pn-e {cls}"></span>'
@@ -262,7 +262,7 @@ def article(p,x,others,BASE,prev,nxt,allp,counts):
     return (head(p,f"{x['title']} – Blog GoWithDME",ex,canon,BASE,kwm+ld,"article")+top(p,k,counts,False)+
       f'<div class="bl-prog" id="blProg" aria-hidden="true"><i></i></div>'
       f'<main class="wrap bl-main bl-art-wrap"><div class="bl-grid bl-grid-a">'
-      f'<article class="bl-art bl-c-{k}" id="blArt" data-k="{key}" data-title="{esc(x["title"])}" data-url="{esc(canon)}">'
+      f'<article class="bl-art bl-c-{k}" id="blArt" data-k="{key}" data-title="{esc(x["title"])}" data-url="{esc(x["_short"])}">'
       f'<nav class="bl-bc" aria-label="Breadcrumb"><a href="{p}">Blog</a><span>›</span><a href="{p}{k}/">{esc(CATNAME[k])}</a></nav>'
       f'<a class="bl-badge" href="{p}{k}/">{ic(k)}{esc(CATNAME[k])}</a>'
       f'<h1>{esc(x["title"])}</h1>'
@@ -281,6 +281,24 @@ def article(p,x,others,BASE,prev,nxt,allp,counts):
       f'<aside class="bl-side bl-side-a" aria-label="Samping"><section class="bl-box bl-toc" id="blToc" hidden><h3>{ic("list")}Daftar isi</h3><ol></ol></section>{side_in(p,allp,counts,k)}</aside>'
       f'</div></main>'
       f'<div class="bl-dock" role="toolbar" aria-label="Aksi cepat"><button type="button" id="dkLike" aria-label="Suka" aria-pressed="false">{ic("heart")}<b data-l></b></button><a href="#komentar" aria-label="Ke komentar">{ic("chat")}<b data-c></b></a><button type="button" id="dkShare" aria-label="Bagikan">{ic("share")}</button><button type="button" id="dkTop" aria-label="Kembali ke atas">{ic("up")}</button></div>'+foot(p))
+def shortcode(x,used):
+    """Kode pendek tetap (5 huruf/angka) dari kategori/alamat; tabrakan -> perpanjang. Dipakai untuk /p/<kode>."""
+    import hashlib
+    key=f'{x["category"]}/{x["slug"]}'
+    n=int(hashlib.sha1(key.encode()).hexdigest(),16); a="0123456789abcdefghijklmnopqrstuvwxyz"; c=""
+    while n and len(c)<12: n,r=divmod(n,36); c+=a[r]
+    L=5
+    while c[:L] in used and used[c[:L]]!=key: L+=1
+    used[c[:L]]=key; x["_code"]=c[:L]; return c[:L]
+def redirect_page(url,title,desc="",base=""):
+    u=esc(url); t=esc(title+" – Blog GoWithDME"); d=esc(desc); img=esc(f"{base}/assets/og-image.png")
+    return (f'<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><title>{t}</title>'
+            f'<meta name="description" content="{d}"><meta name="robots" content="noindex"><link rel="canonical" href="{u}">'
+            f'<meta property="og:type" content="article"><meta property="og:site_name" content="Blog GoWithDME"><meta property="og:title" content="{t}">'
+            f'<meta property="og:description" content="{d}"><meta property="og:url" content="{u}"><meta property="og:image" content="{img}">'
+            f'<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{t}"><meta name="twitter:description" content="{d}"><meta name="twitter:image" content="{img}">'
+            f'<meta http-equiv="refresh" content="0;url={u}"><script>location.replace("{u}"+location.hash)</script></head>'
+            f'<body><p><a href="{u}">{esc(title)}</a></p></body></html>')
 def build(ROOT,BASE,posts):
     """Tulis index.html, index.json, <kategori>/*.html di akar repo. Mengembalikan [(url,lastmod)] untuk sitemap."""
     b=ROOT
@@ -300,17 +318,21 @@ def build(ROOT,BASE,posts):
     for f in ("index.html","index.json"):
         if os.path.exists(f"{b}/{f}"): os.remove(f"{b}/{f}")
     for k,_,_ in CATS: os.makedirs(f"{b}/{k}",exist_ok=True)
+    os.makedirs(f"{b}/p",exist_ok=True)
+    for f in os.listdir(f"{b}/p"):
+        if f.endswith(".html"): os.remove(os.path.join(f"{b}/p",f))
     SLUGCAT.clear()
     for x in posts:
         if x.get("category") in CATNAME and x.get("slug"): SLUGCAT[x["slug"]]=x["category"]
-    ok=[]
+    ok=[]; used={}
     for x in posts:
         if x.get("category") not in CATNAME or not re.match(r"^[a-z0-9]+(-[a-z0-9]+)*$",x.get("slug") or "") or not x.get("title") or not x.get("body"): print("lewati tulisan tidak valid:",x.get("slug")); continue
-        h,kw=pull_keywords(render(x,BASE)); x["_kw"]=merge_tags(x.get("tags"),kw); x["_html"]=add_ids(h); x["_ex"]=excerpt(x["_html"]); x["_m"]=mins(x["_html"]); x["_canon"]=f"{BASE}/{x['category']}/{x['slug']}"; ok.append(x)
+        h,kw=pull_keywords(render(x,BASE)); x["_kw"]=merge_tags(x.get("tags"),kw); x["_html"]=add_ids(h); x["_ex"]=excerpt(x["_html"]); x["_m"]=mins(x["_html"]); x["_canon"]=f"{BASE}/{x['category']}/{x['slug']}"; x["_short"]=f"{BASE}/p/{shortcode(x,used)}"; ok.append(x)
     ok.sort(key=lambda x:x.get("published_at") or "",reverse=True)
     counts={}
     for x in ok: counts[x["category"]]=counts.get(x["category"],0)+1
     urls=[]
+    for x in ok: open(f"{b}/p/{x['_code']}.html","w",encoding="utf-8").write(redirect_page(x["_canon"],x["title"],x["_ex"],BASE))
     # indeks ringan untuk pencarian, "Terpopuler", navigasi di browser, dan pencarian di situs utama (tanpa isi tulisan)
     idx={"v":1,"posts":[{"k":f'{x["category"]}/{x["slug"]}',"t":x["title"],"c":x["category"],"d":(x.get("published_at") or "")[:19],"m":x["_m"],"x":x["_ex"][:140]} for x in ok[:300]]}
     open(b+"/index.json","w",encoding="utf-8").write(json.dumps(idx,ensure_ascii=False,separators=(",",":")))
