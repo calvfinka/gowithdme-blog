@@ -229,7 +229,7 @@ def listing(p,cur,posts,BASE,allp,counts):
     ntopic=sum(1 for k,_,_ in CATS if counts.get(k))
     topics=""  # "Jelajahi topik" dihapus: daftar Topik di samping sudah cukup
     ld=ldj({"@context":"https://schema.org","@type":"CollectionPage","name":f"{name} – Blog GoWithDME","url":canon,"inLanguage":"id"})
-    hero=(f'<header class="bl-hero bl-c-{cur or "all"}"><div><h1>{esc(name)}</h1><p class="bl-sub">{esc(desc)}</p>'
+    hero=(f'<header class="bl-hero bl-c-{cur or "all"}"><div>{('<h1 class="sr">Blog</h1>' if cur=="" else f'<h1>{esc(name)}</h1>')}<p class="bl-sub">{esc(desc)}</p>'
           f'<p class="bl-kpi"><span><b>{len(posts)}</b> tulisan</span>'+(f'<span><b>{ntopic}</b> topik</span>' if cur=="" else "")+'<span class="bl-sv" hidden><b data-tv></b> kali dibaca</span></p></div>'
           f'<form class="bl-q" role="search" id="blQ" action="#" onsubmit="return false"><label class="sr" for="blQi">Cari tulisan</label>{ic("search")}<input id="blQi" type="search" placeholder="Cari tulisan, topik, atau kata kunci…" autocomplete="off" enterkeyhint="search"><button type="button" class="bl-ib" id="blQx" hidden aria-label="Hapus pencarian">{ic("x")}</button></form></header>')
     bar=(f'<div class="bl-bar"><h2 class="bl-h2" id="blH">{"Tulisan terbaru" if cur=="" else "Semua tulisan"}</h2><div class="bl-seg" role="group" aria-label="Urutkan"><button type="button" class="on" data-sort="new" aria-pressed="true">Terbaru</button><button type="button" data-sort="pop" aria-pressed="false" hidden>Terpopuler</button></div></div>')
@@ -269,7 +269,7 @@ def article(p,x,others,BASE,prev,nxt,allp,counts):
       f'<nav class="bl-bc" aria-label="Breadcrumb"><a href="{p}">Blog</a><span>›</span><a href="{p}{k}/">{esc(CATNAME[k])}</a></nav>'
       f'<a class="bl-badge" href="{p}{k}/">{ic(k)}{esc(CATNAME[k])}</a>'
       f'<h1>{esc(x["title"])}</h1>'
-      f'<div class="bl-by"><span class="bl-av" aria-hidden="true">G</span><div><b>Redaksi GoWithDME</b><span><time datetime="{esc((x.get("published_at") or "")[:10])}">{fdate(x.get("published_at"))}</time> · {m} menit baca</span></div></div>'
+      f'<div class="bl-by"><span class="bl-av bl-av-img"><img src="{p}assets/redaksi.jpg" alt="" width="40" height="40" decoding="async"></span><div><b>Redaksi GoWithDME</b><span><time datetime="{esc((x.get("published_at") or "")[:10])}">{fdate(x.get("published_at"))}</time> · {m} menit baca</span></div></div>'
       f'<p class="bl-stats"><span class="bl-s bl-sv" hidden>{ic("eye")}<b data-v></b> dibaca</span><span class="bl-s bl-sc" hidden>{ic("chat")}<b data-c></b> komentar</span><span class="bl-s bl-sl" hidden>{ic("heart")}<b data-l></b> suka</span></p>'
       f'<div class="bl-share" role="group" aria-label="Bagikan tulisan"><span class="bl-sl-t">{ic("share")}Bagikan</span>{shr}<button type="button" class="bl-sb bl-sb-cp" data-copy>{ic("link")}Salin tautan</button><button type="button" class="bl-sb bl-sb-nat" data-native hidden>Lainnya…</button>'
       f'<span class="sp"></span><span class="bl-fs" role="group" aria-label="Ukuran teks">{ic("type")}<button type="button" data-fs="-1" aria-label="Kecilkan teks">A−</button><button type="button" data-fs="1" aria-label="Besarkan teks">A+</button></span></div>'
