@@ -425,7 +425,7 @@ a.bl-av{text-decoration:none}.bl-au{color:inherit}.bl-au:hover{color:var(--accen
 /* halaman penulis (/penulis/kalfin) */
 .bl-au-page{max-width:860px;padding-bottom:28px}
 .au-hero{display:grid;grid-template-columns:1fr;gap:22px;align-items:center;padding:6px 0 26px;margin-bottom:6px;border-bottom:1px solid var(--line)}
-.au-ph{width:min(240px,62vw);aspect-ratio:1;border-radius:32px;overflow:hidden;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:92px;font-weight:800;box-shadow:0 0 0 4px var(--bg),0 0 0 7px var(--accent),0 18px 40px color-mix(in srgb,var(--accent) 28%,transparent)}
+.au-ph{width:min(240px,62vw);aspect-ratio:1;border-radius:50%;overflow:hidden;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:92px;font-weight:800;box-shadow:0 0 0 4px var(--bg),0 0 0 7px var(--accent),0 18px 40px color-mix(in srgb,var(--accent) 28%,transparent)}
 .au-ph img{width:100%;height:100%;object-fit:cover;display:block}
 .au-k{margin:0 0 6px;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
 .au-id h1{margin:0;font-size:clamp(1.9rem,6.5vw,2.8rem);line-height:1.1;letter-spacing:-.03em;font-weight:800}
@@ -449,3 +449,11 @@ a.bl-av{text-decoration:none}.bl-au{color:inherit}.bl-au:hover{color:var(--accen
 .au-wa{margin-top:10px;flex-wrap:wrap;border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}.au-wa>div{flex:1 1 140px;min-width:0}
 @media(min-width:640px){.au-hero{grid-template-columns:240px 1fr;gap:34px}.au-ph{width:240px}.au-socs{grid-template-columns:1fr 1fr}.au-facts{grid-template-columns:1fr 1fr}}
 @media(max-width:420px){.au-proj{flex-direction:column}.au-wa .au-btn{width:100%}}
+
+/* v5: foto bulat + logo sosmed resmi */
+.au-ph img{border-radius:50%;object-position:50% 50%}
+.au-si.au-sb{background:var(--side);border:1px solid var(--line);color:var(--ink)}
+.au-si svg.bi{width:22px;height:22px;display:block}
+.bi-ink{fill:#000}
+html[data-theme="dark"] .bi-ink{fill:#fff}
+@media(prefers-color-scheme:dark){html:not([data-theme="light"]) .bi-ink{fill:#fff}}
