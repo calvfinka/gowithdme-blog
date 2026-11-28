@@ -1,0 +1,32 @@
+# Sinkron blog: ambil tulisan terbit dari Supabase, bangun ulang halaman statis, commit bila ada perubahan.
+# Pemicu: segera setelah tulisan terbit/diubah (supabase/auto_sinkron_blog.sql), cadangan sekali sehari, atau manual (Actions > Sinkron blog > Run workflow).
+name: Sinkron blog
+on:
+  schedule: [{cron: "7 21 * * *"}]  # 04.07 WIB, cadangan; pemicu utama dari Supabase
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+# Satu sinkron berjalan, satu menunggu: banyak pemicu beruntun tidak menumpuk dan perubahan terakhir tetap terambil.
+concurrency: {group: sinkron, cancel-in-progress: false}
+jobs:
+  sinkron:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Ambil data dan bangun
+        run: |
+          python3 tools/gen_blog.py
+          python3 tools/build.py
+      - name: Commit jika berubah
+        id: commit
+        run: |
+          git config user.name "gwm-bot"; git config user.email "gwm-bot@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "changed=false" >> $GITHUB_OUTPUT; else git commit -m "Sinkron blog"; git pull --rebase --autostash; git push; echo "changed=true" >> $GITHUB_OUTPUT; fi
+      - name: Minta GitHub Pages membangun ulang
+        if: steps.commit.outputs.changed == 'true'
+        env: {GH_TOKEN: "${{ github.token }}"}
+        run: gh api -X POST "/repos/${{ github.repository }}/pages/builds" || true
