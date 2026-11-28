@@ -418,3 +418,34 @@ body.bl{overflow-x:clip;padding-bottom:calc(84px + env(safe-area-inset-bottom,0p
 
 /* avatar Redaksi: foto bulat 1:1 */
 .bl-av-img{background:none;overflow:hidden;padding:0}.bl-av-img img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
+
+/* byline: nama Redaksi dan avatar menaut ke profil penulis */
+a.bl-av{text-decoration:none}.bl-au{color:inherit}.bl-au:hover{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+
+/* halaman penulis (/penulis/kalfin) */
+.bl-au-page{max-width:860px;padding-bottom:28px}
+.au-hero{display:grid;grid-template-columns:1fr;gap:22px;align-items:center;padding:6px 0 26px;margin-bottom:6px;border-bottom:1px solid var(--line)}
+.au-ph{width:min(240px,62vw);aspect-ratio:1;border-radius:32px;overflow:hidden;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:92px;font-weight:800;box-shadow:0 0 0 4px var(--bg),0 0 0 7px var(--accent),0 18px 40px color-mix(in srgb,var(--accent) 28%,transparent)}
+.au-ph img{width:100%;height:100%;object-fit:cover;display:block}
+.au-k{margin:0 0 6px;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.au-id h1{margin:0;font-size:clamp(1.9rem,6.5vw,2.8rem);line-height:1.1;letter-spacing:-.03em;font-weight:800}
+.au-tag{margin:8px 0 0;font-size:1.15rem;font-weight:700;color:var(--ink)}.au-tag b{color:var(--accent);font-weight:inherit}
+.au-facts{display:grid;gap:10px;margin:18px 0 0}.au-facts div{display:grid;gap:1px;padding-left:12px;border-left:3px solid color-mix(in srgb,var(--accent) 55%,transparent)}
+.au-facts dt{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}.au-facts dd{margin:0;font-size:15px;line-height:1.45}
+.au-sec{margin-top:34px}.au-sec>h2{display:flex;align-items:center;gap:10px;margin:0 0 14px;font-size:1.35rem;letter-spacing:-.02em}
+.au-sec>h2::before{content:"";width:5px;height:1.1em;border-radius:3px;background:var(--accent);flex:none}
+.au-bio p{margin:0 0 14px;font-size:1.02rem;line-height:1.75}.au-bio a,.au-tl a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;font-weight:600}
+.au-tl{list-style:none;margin:0;padding:0 0 0 30px;position:relative}.au-tl::before{content:"";position:absolute;left:9px;top:8px;bottom:8px;width:2px;background:var(--line)}
+.au-tl li{position:relative;padding:0 0 20px}.au-tl li:last-child{padding-bottom:0}
+.au-tl li::before{content:"";position:absolute;left:-30px;top:5px;width:14px;height:14px;border-radius:50%;background:var(--bg);border:3px solid var(--accent)}
+.au-tl b{display:block;font-size:15px}.au-tl p{margin:3px 0 0;color:var(--mute);font-size:14.5px;line-height:1.6}
+.au-proj{display:flex;gap:16px;align-items:flex-start;padding:18px;border:1px solid var(--line);border-radius:18px;background:var(--side)}
+.au-pm svg.mark{width:52px;height:52px;display:block}.au-proj h3{margin:0;font-size:1.2rem}.au-proj h3 b{color:var(--accent);font-weight:inherit}.au-proj p{margin:4px 0 14px;color:var(--mute);line-height:1.55}
+.au-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:12px;background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:15px;text-decoration:none;white-space:nowrap}.au-btn:hover{filter:brightness(1.08)}
+.au-socs{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;gap:10px}
+.au-soc,.au-wa{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;color:var(--ink);text-decoration:none;min-width:0}.au-soc:hover{border-color:var(--accent);background:var(--sel)}
+.au-si{width:38px;height:38px;border-radius:11px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);display:grid;place-items:center;flex:none}.au-si svg.i{width:20px;height:20px}
+.au-soc small,.au-wa small{display:block;font-size:12px;color:var(--mute)}.au-soc b,.au-wa b{display:block;font-size:15px;overflow-wrap:anywhere}
+.au-wa{margin-top:10px;flex-wrap:wrap;border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}.au-wa>div{flex:1 1 140px;min-width:0}
+@media(min-width:640px){.au-hero{grid-template-columns:240px 1fr;gap:34px}.au-ph{width:240px}.au-socs{grid-template-columns:1fr 1fr}.au-facts{grid-template-columns:1fr 1fr}}
+@media(max-width:420px){.au-proj{flex-direction:column}.au-wa .au-btn{width:100%}}

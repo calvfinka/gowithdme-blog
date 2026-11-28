@@ -151,7 +151,10 @@ def add_ids(h):
         return f'<h{m.group(1)} id="{sid}{"-"+str(n+1) if n else ""}">{m.group(2)}</h{m.group(1)}>'
     return re.sub(r"<h([23])>(.*?)</h\1>",f,h,flags=re.S)
 # ---- ikon (sprite satu kali per halaman; dipakai juga oleh js/blog-ui.js dan js/blog-live.js) ----
-_I={"eye":'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+_I={"ig":'<rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/>',
+ "gh":'<path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/>',
+ "mail":'<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+ "eye":'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
  "clock":'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
  "heart":'<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',
  "chat":'<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
@@ -238,6 +241,40 @@ def listing(p,cur,posts,BASE,allp,counts):
         f'<div class="bl-grid"><div class="bl-col">{bar}<div class="bl-list bl-feed" id="blFeed">{feed}</div><div class="bl-list" id="blRes" hidden></div><p class="bl-empty" id="blNone" hidden>Tidak ada tulisan yang cocok. Coba kata kunci lain.</p>'
         +(f'<p class="bl-note">Menampilkan {len(shown)} tulisan terbaru. Pilih topik di atas untuk melihat semuanya.</p>' if cur=="" and len(posts)>len(shown) else "")+
         f'</div>{side(p,allp,counts,cur)}</div></main>'+foot(p))
+AU_IG="https://instagram.com/calvf1nka"; AU_TT="https://tiktok.com/@ks2908_"; AU_GH="https://github.com/calvfinka"; AU_WA="https://wa.me/6282243562960"
+def author_page(p,BASE,posts,allp,counts,photo):
+    """Halaman profil penulis: /penulis/kalfin. Data diri HANYA yang diberikan pemilik; tanggal lahir/umur tidak ditampilkan."""
+    canon=f"{BASE}/penulis/kalfin"; nama="Kalfin Agus Setiawan"
+    desc="Kalfin Agus Setiawan, Founder GoWithDME, dari Bandung. Cerita, perjalanan, dan cara menghubungi."
+    pic=(f'<img src="{p}assets/kalfin.jpg" alt="Foto {nama}" width="240" height="240" decoding="async">' if photo else '<span aria-hidden="true">K</span>')
+    sameas=[AU_IG,AU_TT,AU_GH]
+    ld=ldj({"@context":"https://schema.org","@type":"ProfilePage","mainEntity":{"@type":"Person","name":nama,"jobTitle":"Founder GoWithDME","url":canon,
+        **({"image":f"{BASE}/assets/kalfin.jpg"} if photo else {}),"sameAs":sameas,"homeLocation":{"@type":"Place","name":"Bandung, Jawa Barat"}}})
+    soc=lambda href,icon,lab,val,me=True: (f'<li><a class="au-soc" href="{href}" target="_blank" rel="{"me " if me else ""}noopener noreferrer">'
+        f'<span class="au-si">{ic(icon)}</span><span><small>{lab}</small><b>{val}</b></span></a></li>')
+    steps=[("Zaman sekolah","Mulai ngulik blog di Blogger. Tapi selalu terbawa arus memperbaiki dan mempercantik tampilan UI, jadi tidak fokus lagi dan sering berhenti di tengah jalan karena menyerah atau burnout."),
+           ("Blog pertama",'<a href="https://kalfinsetiawan29.blogspot.com" target="_blank" rel="noopener noreferrer">kalfinsetiawan29.blogspot.com</a>, dan masih ada sampai sekarang.'),
+           ("2017","Membuat blog lagi di Blogger dengan domain calvfinka.id selama 3 tahun. Tidak saya lanjutkan karena tidak konsisten."),
+           ("GoWithDME","Berawal dari pengalaman menonton konser sendirian, benar-benar sendirian.")]
+    tl="".join(f'<li><b>{a}</b><p>{b}</p></li>' for a,b in steps)
+    latest="".join(card(p,x) for x in posts[:6])
+    body=(f'<main class="wrap bl-main bl-au-page">'
+      f'<header class="au-hero"><div class="au-ph">{pic}</div><div class="au-id"><p class="au-k">Penulis</p><h1>{nama}</h1><p class="au-tag">Founder GoWith<b>DME</b></p>'
+      f'<dl class="au-facts"><div><dt>Domisili</dt><dd>Bandung, Jawa Barat</dd></div><div><dt>Asal</dt><dd>Kebumen, Jawa Tengah</dd></div>'
+      f'<div><dt>Pendidikan</dt><dd>Lulusan SMK MA\'ARIF 6 AYAH</dd></div>'
+      f'<div><dt>Sekarang</dt><dd>Saat ini berkarier di industri makanan di Bandung sambil membangun GoWithDME</dd></div></dl></div></header>'
+      f'<section class="au-sec" aria-labelledby="au-cerita"><h2 id="au-cerita">Cerita</h2><div class="au-bio">'
+      f'<p>Saya sudah dari zaman sekolah suka ngulik blog di Blogger. Tapi saya selalu terbawa arus untuk memperbaiki dan mempercantik tampilan UI, jadi tidak fokus lagi dan sering berhenti di tengah jalan karena akhirnya menyerah atau burnout.</p>'
+      f'<p>Blog pertama saya, <a href="https://kalfinsetiawan29.blogspot.com" target="_blank" rel="noopener noreferrer">kalfinsetiawan29.blogspot.com</a>, masih ada sampai sekarang. Lalu pada 2017 saya membuat blog lagi di Blogger dengan domain calvfinka.id selama 3 tahun, dan tidak saya lanjutkan karena tidak konsisten.</p>'
+      f'<p>Awalnya saya membuat GoWithDME karena pernah menonton konser sendirian, benar-benar sendirian.</p></div></section>'
+      f'<section class="au-sec" aria-labelledby="au-jalan"><h2 id="au-jalan">Perjalanan</h2><ol class="au-tl">{tl}</ol></section>'
+      f'<section class="au-sec" aria-labelledby="au-proyek"><h2 id="au-proyek">Proyek</h2><div class="au-proj"><div class="au-pm">{LOGO_MARK}</div><div><h3>GoWith<b>DME</b></h3>'
+      f'<p>Portal info konser, festival, dan open trip gunung, plus cari teman jalan.</p><a class="au-btn" href="{MAIN}/id/">Buka GoWithDME</a></div></div></section>'
+      f'<section class="au-sec" aria-labelledby="au-temu"><h2 id="au-temu">Temukan Saya</h2><ul class="au-socs">'
+      +soc(AU_IG,"ig","Instagram","@calvf1nka")+soc(AU_TT,"hiburan","TikTok","@ks2908_")+soc(AU_GH,"gh","GitHub","calvfinka")+soc("mailto:personal@gowithdme.com","mail","Email","personal@gowithdme.com",False)+
+      f'</ul><div class="au-wa"><span class="au-si">{ic("chat")}</span><div><small>WhatsApp</small><b>082243562960</b></div><a class="au-btn" href="{AU_WA}" target="_blank" rel="noopener noreferrer">Chat WhatsApp</a></div></section>'
+      f'<section class="au-sec" aria-labelledby="au-art"><h2 id="au-art">Artikel Terbaru dari Kalfin</h2><div class="bl-list">{latest}</div></section></main>')
+    return head(p,f"{nama} – Founder GoWithDME | Blog GoWithDME",desc,canon,BASE,ld,"profile")+top(p,"penulis",counts)+body+foot(p)
 def sharelinks(url,title):
     u=_u(url); t=_u(title); tu=_u(title+" "+url)
     return [("WhatsApp",f"https://wa.me/?text={tu}","wa"),("Telegram",f"https://t.me/share/url?url={u}&text={t}","tg"),("X",f"https://twitter.com/intent/tweet?text={t}&url={u}","x"),("Facebook",f"https://www.facebook.com/sharer/sharer.php?u={u}","fb"),("Email",f"mailto:?subject={t}&body={tu}","em")]
@@ -269,7 +306,7 @@ def article(p,x,others,BASE,prev,nxt,allp,counts):
       f'<nav class="bl-bc" aria-label="Breadcrumb"><a href="{p}">Blog</a><span>›</span><a href="{p}{k}/">{esc(CATNAME[k])}</a></nav>'
       f'<a class="bl-badge" href="{p}{k}/">{ic(k)}{esc(CATNAME[k])}</a>'
       f'<h1>{esc(x["title"])}</h1>'
-      f'<div class="bl-by"><span class="bl-av bl-av-img"><img src="{p}assets/redaksi.jpg" alt="" width="40" height="40" decoding="async"></span><div><b>Redaksi GoWithDME</b><span><time datetime="{esc((x.get("published_at") or "")[:10])}">{fdate(x.get("published_at"))}</time> · {m} menit baca</span></div></div>'
+      f'<div class="bl-by"><a class="bl-av bl-av-img" href="{p}penulis/kalfin" tabindex="-1" aria-hidden="true"><img src="{p}assets/redaksi.jpg" alt="" width="40" height="40" decoding="async"></a><div><b><a class="bl-au" href="{p}penulis/kalfin">Redaksi GoWithDME</a></b><span><time datetime="{esc((x.get("published_at") or "")[:10])}">{fdate(x.get("published_at"))}</time> · {m} menit baca</span></div></div>'
       f'<p class="bl-stats"><span class="bl-s bl-sv" hidden>{ic("eye")}<b data-v></b> dibaca</span><span class="bl-s bl-sc" hidden>{ic("chat")}<b data-c></b> komentar</span><span class="bl-s bl-sl" hidden>{ic("heart")}<b data-l></b> suka</span></p>'
       f'<div class="bl-share" role="group" aria-label="Bagikan tulisan"><span class="bl-sl-t">{ic("share")}Bagikan</span>{shr}<button type="button" class="bl-sb bl-sb-cp" data-copy>{ic("link")}Salin tautan</button><button type="button" class="bl-sb bl-sb-nat" data-native hidden>Lainnya…</button>'
       f'<span class="sp"></span><span class="bl-fs" role="group" aria-label="Ukuran teks">{ic("type")}<button type="button" data-fs="-1" aria-label="Kecilkan teks">A−</button><button type="button" data-fs="1" aria-label="Besarkan teks">A+</button></span></div>'
@@ -349,4 +386,6 @@ def build(ROOT,BASE,posts):
             i=ok.index(x); nxt=ok[i-1] if i>0 else None; prev=ok[i+1] if i+1<len(ok) else None
             open(f"{b}/{k}/{x['slug']}.html","w",encoding="utf-8").write(article("../",x,others,BASE,prev,nxt,ok,counts))
             urls.append((f"{BASE}/{k}/{x['slug']}",x.get("updated_at") or x.get("published_at")))
+    os.makedirs(f"{b}/penulis",exist_ok=True)
+    open(f"{b}/penulis/kalfin.html","w",encoding="utf-8").write(author_page("../",BASE,ok,ok,counts,os.path.exists(f"{b}/assets/kalfin.jpg"))); urls.append((f"{BASE}/penulis/kalfin",None))
     return urls
